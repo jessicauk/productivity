@@ -1,20 +1,36 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-export function GET(
+export async function GET(
   request: any,
   { params }: { params: { taskId: string } }
-): NextResponse {
-  return NextResponse.json("GET" + params.taskId);
+): Promise<NextResponse> {
+  const task = await prisma.task.findUnique({
+    where: { taskId: Number(params.taskId) },
+  });
+  return NextResponse.json({ data: task });
 }
-export function PUT(
+export async function PUT(
   request: any,
   { params }: { params: { taskId: string } }
-): NextResponse {
-  return NextResponse.json("PUT" + params.taskId);
+): Promise<NextResponse> {
+  const data = await request.json();
+  const taskUpdated = await prisma.task.update({
+    where: { taskId: Number(params.taskId) },
+    data,
+  });
+  return NextResponse.json({ data: taskUpdated });
 }
-export function DELETE(
+export async function DELETE(
   request: any,
   { params }: { params: { taskId: string } }
-): NextResponse {
-  return NextResponse.json("DELETE" + params.taskId);
+): Promise<NextResponse> {
+  try {
+    const task = await prisma.task.delete({
+      where: { taskId: Number(params.taskId) },
+    });
+    return NextResponse.json({ taskId: params.taskId, data: task });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message });
+  }
 }
