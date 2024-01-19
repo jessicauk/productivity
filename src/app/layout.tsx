@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import RootProvider from "./root-provider";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -19,9 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className={roboto.className}>
-        {children}
+        <RootProvider>{children}</RootProvider>
       </body>
     </html>
   );

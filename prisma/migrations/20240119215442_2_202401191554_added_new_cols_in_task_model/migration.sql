@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Task" ADD COLUMN     "duration" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "timeSpent" INTEGER NOT NULL DEFAULT 0,
+ALTER COLUMN "priorityId" DROP DEFAULT;
+
+-- AddForeignKey
+ALTER TABLE "Task" ADD CONSTRAINT "Task_priorityId_fkey" FOREIGN KEY ("priorityId") REFERENCES "Priority"("priorityId") ON DELETE NO ACTION ON UPDATE NO ACTION;

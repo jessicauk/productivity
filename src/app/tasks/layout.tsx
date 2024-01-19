@@ -1,7 +1,8 @@
+"use client";
 import { Roboto } from "next/font/google";
 import Header from "@/components/header/page";
-import { MenuList, MenuItem, Divider } from "@mui/material";
-import Link from "next/link";
+// TO DO import { MenuList, MenuItem, Divider } from "@mui/material";
+// TO DO import Link from "next/link";
 import React from "react";
 
 const roboto = Roboto({
@@ -11,8 +12,13 @@ const roboto = Roboto({
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-12 grid-flow-row gap-2">
-      <Header />
+    <div className="bg-white dark:bg-slate-800 grid grid-cols-12 grid-flow-row gap-2">
+      <Header
+        navItems={["Home", "Charts", "History"]}
+        mobileOpen={false}
+        setMobileOpen={() => null}
+      />
+      {/* <Header />
       <aside className="col-span-2">
         <MenuList>
           <MenuItem>
@@ -31,8 +37,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link href="/charts">Stats</Link>
           </MenuItem>
         </MenuList>
-      </aside>
-      <main className="col-span-10">{children}</main>
+      </aside> */}
+      <main className="col-span-12 my-8 px-8">{children}</main>
     </div>
   );
 }

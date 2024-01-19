@@ -21,28 +21,32 @@ model User {
 }
 
 model Task {
-  taskId      Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  taskId      Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   title       String
   description String?
-  status      String   @default("To Do")
-  done        Boolean  @default(false)
+  status      String    @default("To Do")
+  duration    Int       @default(0)
+  timeSpent   Int       @default(0)
+  done        Boolean   @default(false)
   authorId    Int?
-  author      User?    @relation(fields: [authorId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
-  priorityId  Int?     @default(1)
-}
-
-model Status {
-  statusId    Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String   @unique
-  description String?
+  author      User?     @relation(fields: [authorId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
+  priorityId  Int?
+  priority    Priority? @relation(fields: [priorityId], references: [priorityId], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Priority {
   priorityId  Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String   @unique
+  description String?
+  tasks       Task[]
+}
+
+model Status {
+  statusId    Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   name        String   @unique
