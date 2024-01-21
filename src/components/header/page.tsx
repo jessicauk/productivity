@@ -29,7 +29,7 @@ export default function Header({ navItems, setMobileOpen }: Props) {
 
   return (
     <div className="col-span-full">
-      <AppBar component="nav" position="static">
+      <AppBar className="bg-teal-600" component="nav" position="static">
         <Toolbar>
           <IconButton
             color="inherit"

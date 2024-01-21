@@ -20,7 +20,7 @@ const Tasks = () => {
         <DashboardCard
           title="Completed"
           count={0}
-          backgroundColor="bg-green-300"
+          backgroundColor="bg-sky-300"
         />
       </div>
       <div className="w-full h-full">

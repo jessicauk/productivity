@@ -23,20 +23,18 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
       onClose={handleClose}
       aria-labelledby="task-dialog"
     >
-      <DialogTitle id="task-dialog">
-        {"Use Google's location service?"}
-      </DialogTitle>
+      <DialogTitle id="task-dialog">Add New Task</DialogTitle>
       <DialogContent>
         <Form />
       </DialogContent>
-      <DialogActions>
+      {/* <DialogActions>
         <Button autoFocus onClick={handleClose}>
           Cancel
         </Button>
         <Button onClick={handleClose} autoFocus>
           Create || Update
         </Button>
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
   );
 }

@@ -21,7 +21,11 @@ export default function MenuDrawer({
   navItems,
 }: DrawerProps) {
   return (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+    <Box
+      onClick={handleDrawerToggle}
+      sx={{ textAlign: "center" }}
+      className="bg-teal-600 dark:text-white min-h-screen"
+    >
       <Typography variant="h6" sx={{ my: 2 }}>
         Menu
       </Typography>
@@ -29,7 +33,7 @@ export default function MenuDrawer({
       <List>
         {navItems.map((item) => (
           <ListItem key={item.title} disablePadding>
-            <Link href={`${item.href}`}>
+            <Link href={`${item.href}`} className="w-full">
               <ListItemButton sx={{ textAlign: "center" }}>
                 <ListItemText primary={item.title} />
               </ListItemButton>

@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import { getTasks } from "@/api-client";
 import { StyledDataGrid } from "./styles";
@@ -9,7 +9,7 @@ const columns: GridColDef[] = [
   {
     field: "taskId",
     headerName: "ID",
-    width: 70,
+    width: 100,
     headerClassName: "text-white font-bold",
   },
   {
@@ -33,8 +33,14 @@ const columns: GridColDef[] = [
     headerClassName: "text-white font-semibold",
   },
   {
-    field: "updatedAt",
-    headerName: "Updated At",
+    field: "duration",
+    headerName: "Duration",
+    width: 300,
+    headerClassName: "text-white font-semibold",
+  },
+  {
+    field: "timeSpent",
+    headerName: "Time Spent",
     width: 300,
     headerClassName: "text-white font-semibold",
   },
@@ -53,6 +59,8 @@ interface TasksData {
   title: string;
   description: string;
   status: string;
+  duration: number;
+  timeSpent: number;
   done: boolean;
 }
 
@@ -63,8 +71,9 @@ export default function DataTable() {
   });
 
   return (
-    <div style={{ height: 400, width: "100%" }} className="text-white">
+    <div style={{ height: 400, width: "100%" }} className="dark:text-white">
       <StyledDataGrid
+        className="dark:text-white"
         rows={data || []}
         columns={columns}
         getRowId={(row) => row.taskId}
@@ -74,7 +83,9 @@ export default function DataTable() {
           },
         }}
         pageSizeOptions={[5, 10]}
-        getRowClassName={(params) => `task--${params.row.status}`}
+        getRowClassName={(params) =>
+          `task--${params.row.status.replaceAll(" ", "-").toLowerCase()}`
+        }
       />
     </div>
   );
