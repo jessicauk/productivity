@@ -7,9 +7,9 @@ export async function GET() {
 }
 
 export async function POST(request: any) {
-  const { title, description, status, done, authorId } = await request.json();
+  const { title, description, status } = await request.json();
   const newTask = await prisma.task.create({
-    data: { title, description, status, done, authorId },
+    data: { title, description, status },
   });
 
   return NextResponse.json({
