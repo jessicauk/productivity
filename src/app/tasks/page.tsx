@@ -1,10 +1,11 @@
 "use client";
 import DashboardCard from "@/components/dashboard-card/page";
 import DataTable from "@/components/data-table/page";
+import DialogContainer from "@/components/dialog-container";
 
 const Tasks = () => {
   return (
-    <main className="w-full h-screen">
+    <div className="w-full">
       <div className="gap-4 grid grid-cols-1 sm:grid-cols-3 grid-flow-row">
         <DashboardCard
           title="To do"
@@ -22,10 +23,11 @@ const Tasks = () => {
           backgroundColor="bg-green-300"
         />
       </div>
-      <div className="w-full">
+      <div className="w-full h-full">
+        <DialogContainer />
         <DataTable />
       </div>
-    </main>
+    </div>
   );
 };
 

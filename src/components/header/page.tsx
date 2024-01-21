@@ -1,51 +1,34 @@
 "use client";
-import { useState } from "react";
 import Link from "next/link";
+/*
+To DO 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import StopIcon from "@mui/icons-material/Stop";
-import ReplayIcon from "@mui/icons-material/Replay";
+import ReplayIcon from "@mui/icons-material/Replay"; */
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { AppBar, Toolbar, IconButton, Menu } from "@mui/material";
+import { AppBar, Toolbar, IconButton } from "@mui/material";
 
-interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  navItems: string[];
-  mobileOpen: boolean;
-  setMobileOpen: (isOpen: boolean) => void;
+interface Route {
+  title: string;
+  href: string;
 }
 
-export default function Header({ navItems, mobileOpen, setMobileOpen }: Props) {
+interface Props {
+  navItems: Route[];
+  setMobileOpen: () => void;
+}
+
+export default function Header({ navItems, setMobileOpen }: Props) {
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    setMobileOpen();
   };
 
   return (
     <div className="col-span-full">
-      {/* <nav className="flex justify-between text-slate-900 dark:text-white">
-        <Link href="/" className="font-bond text-3xl ">
-          Logo
-        </Link>
-        <div className="space-x-4 text-xl">
-          <div className="flex">
-            <div>
-              <h2>
-                Time <span>02:59:59</span>
-              </h2>
-            </div>
-            <PlayArrowIcon />
-            <PauseIcon />
-            <StopIcon />
-            <ReplayIcon />
-          </div>
-        </div>
-      </nav> */}
       <AppBar component="nav" position="static">
         <Toolbar>
           <IconButton
@@ -66,8 +49,8 @@ export default function Header({ navItems, mobileOpen, setMobileOpen }: Props) {
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems?.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
-                {item}
+              <Button key={item.title} sx={{ color: "#fff" }}>
+                <Link href={item.href}>{item.title}</Link>
               </Button>
             ))}
           </Box>

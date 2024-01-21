@@ -5,10 +5,15 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import Link from "next/link";
 
+interface Route {
+  title: string;
+  href: string;
+}
 interface DrawerProps {
   handleDrawerToggle: () => void;
-  navItems: string[];
+  navItems: Route[];
 }
 
 export default function MenuDrawer({
@@ -23,10 +28,12 @@ export default function MenuDrawer({
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
+          <ListItem key={item.title} disablePadding>
+            <Link href={`${item.href}`}>
+              <ListItemButton sx={{ textAlign: "center" }}>
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </Link>
           </ListItem>
         ))}
       </List>

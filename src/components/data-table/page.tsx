@@ -63,7 +63,7 @@ export default function DataTable() {
   });
 
   return (
-    <div style={{ height: 400, width: "100%" }} className="text-white my-8">
+    <div style={{ height: 400, width: "100%" }} className="text-white">
       <StyledDataGrid
         rows={data || []}
         columns={columns}
