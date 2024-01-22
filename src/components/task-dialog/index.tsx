@@ -22,19 +22,30 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
       open={open}
       onClose={handleClose}
       aria-labelledby="task-dialog"
+      classes={{ paper: "dark:bg-gray-800 dark:text-white text-4xl" }}
     >
       <DialogTitle id="task-dialog">Add New Task</DialogTitle>
       <DialogContent>
         <Form />
       </DialogContent>
-      {/* <DialogActions>
-        <Button autoFocus onClick={handleClose}>
+      <DialogActions>
+        <Button
+          autoFocus
+          onClick={handleClose}
+          variant="text"
+          className="text-white hover:text-teal-600"
+        >
           Cancel
         </Button>
-        <Button onClick={handleClose} autoFocus>
-          Create || Update
+        <Button
+          onClick={handleClose}
+          autoFocus
+          variant="contained"
+          className="bg-teal-300 text-white hover:bg-teal-600"
+        >
+          Create
         </Button>
-      </DialogActions> */}
+      </DialogActions>
     </Dialog>
   );
 }

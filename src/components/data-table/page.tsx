@@ -3,6 +3,7 @@ import * as React from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import { getTasks } from "@/api-client";
+import Link from "next/link";
 import { StyledDataGrid } from "./styles";
 
 const columns: GridColDef[] = [
@@ -11,12 +12,22 @@ const columns: GridColDef[] = [
     headerName: "ID",
     width: 100,
     headerClassName: "text-white font-bold",
+    renderCell: (params) => (
+      <Link href={`/tasks/${params.row.taskId}`} passHref>
+        {params.row.taskId}
+      </Link>
+    ),
   },
   {
     field: "title",
     headerName: "Title",
     width: 300,
     headerClassName: "text-white font-bold",
+    renderCell: (params) => (
+      <Link href={`/tasks/${params.row.taskId}`} passHref>
+        {params.row.title}
+      </Link>
+    ),
   },
   {
     field: "description",
@@ -65,7 +76,7 @@ interface TasksData {
 }
 
 export default function DataTable() {
-  const { data, isLoading } = useQuery<TasksData[]>({
+  const { data } = useQuery<TasksData[]>({
     queryKey: ["tasks"],
     queryFn: getTasks,
   });
@@ -86,6 +97,11 @@ export default function DataTable() {
         getRowClassName={(params) =>
           `task--${params.row.status.replaceAll(" ", "-").toLowerCase()}`
         }
+        classes={{
+          root: "dark:text-white",
+          footerContainer: "dark:text-white",
+          toolbarContainer: "dark:text-white font-semibold",
+        }}
       />
     </div>
   );

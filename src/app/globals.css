@@ -2,3 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  border: none;
+}
+
+.custom-outline fieldset.MuiOutlinedInput-notchedOutline {
+  border-color: rgb(255 255 255);
+}
+
+.custom-outline.MuiOutlinedInput-notchedOutline {
+  border-color: rgb(255, 255, 255);
+}
+
+.custom-outline.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: rgb(94 234 212);
+}
+
+.custom-outline:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgb(255 255 255);
+}
