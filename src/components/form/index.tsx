@@ -4,7 +4,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { Box, Button } from "@mui/material";
 
 // TO DO
 // import TimePicker from "@mui/lab/TimePicker";
@@ -14,15 +15,20 @@ import { useForm } from "react-hook-form";
 type FormState = {
   title: string;
   description: string;
-  option: string;
+  duration: string;
   priority: string;
   selectedTime: Date | null;
 };
-export default function Form() {
+
+interface FormProps {
+  handleSubmit: (data: FormState) => void;
+  handleClose: () => void;
+}
+export default function Form(props: FormProps) {
   const [formState, setFormState] = useState<FormState>({
     title: "",
     description: "",
-    option: "",
+    duration: "",
     priority: "",
     selectedTime: null,
   });
@@ -32,11 +38,12 @@ export default function Form() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormState>();
 
-  const onSubmit = (data: any) => console.log(data);
-
-  console.log(watch("example")); // watch input value by passing the name of it
+  const onSubmit: SubmitHandler<FormState> = (data) => {
+    props.handleSubmit(data);
+    props.handleClose();
+  };
 
   const handleInputChange = <K extends keyof FormState>(
     fieldName: K,
@@ -51,6 +58,7 @@ export default function Form() {
   return (
     <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <TextField
+        {...register("title", { required: true })}
         InputLabelProps={{ className: "dark:text-white custom-outline" }}
         InputProps={{
           className: "dark:text-white border-white custom-outline",
@@ -64,6 +72,7 @@ export default function Form() {
         autoFocus
       />
       <TextField
+        {...register("description")}
         InputLabelProps={{ className: "dark:text-white custom-outline" }}
         InputProps={{
           className: "dark:text-white border-white custom-outline",
@@ -78,18 +87,21 @@ export default function Form() {
       />
       <FormControl fullWidth margin="normal">
         <InputLabel className="dark:text-white custom-outline">
-          Option
+          Duration
         </InputLabel>
         <Select
+          id="duration"
+          {...register("duration", { required: true })}
           inputProps={{ className: "dark:text-white bg-transparent" }}
-          value={formState.option}
-          onChange={(e) => handleInputChange("option", e.target.value)}
-          label="Option"
+          value={formState.duration}
+          onChange={(e) => handleInputChange("duration", e.target.value)}
+          label="Duration"
           className="dark:text-white custom-outline bg-transparent"
         >
-          <MenuItem value="option1">Option 1</MenuItem>
-          <MenuItem value="option2">Option 2</MenuItem>
-          <MenuItem value="option3">Option 3</MenuItem>
+          <MenuItem value="30">30 mins</MenuItem>
+          <MenuItem value="45">45 mins</MenuItem>
+          <MenuItem value="60">1 hr</MenuItem>
+          <MenuItem value="custom">Custom</MenuItem>
         </Select>
       </FormControl>
 
@@ -97,18 +109,36 @@ export default function Form() {
         <InputLabel className="dark:text-white">Priority</InputLabel>
         <Select
           id="priority"
+          {...register("priority", { required: true })}
           inputProps={{ className: "dark:text-white custom-menu-list" }}
           value={formState.priority}
           onChange={(e) => handleInputChange("priority", e.target.value)}
           label="Priority"
           className="dark:text-white custom-outline custom-menu-list"
         >
-          <MenuItem value="high">High</MenuItem>
-          <MenuItem value="medium">Medium</MenuItem>
-          <MenuItem value="low">Low</MenuItem>
+          <MenuItem value="1">High</MenuItem>
+          <MenuItem value="2">Medium</MenuItem>
+          <MenuItem value="3">Low</MenuItem>
         </Select>
       </FormControl>
-      <input type="submit" />
+      <Box>
+        <Button
+          autoFocus
+          onClick={props.handleClose}
+          variant="text"
+          className="text-white hover:text-teal-600"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          autoFocus
+          variant="contained"
+          className="bg-teal-300 text-white hover:bg-teal-600"
+        >
+          Create
+        </Button>
+      </Box>
     </form>
   );
 }

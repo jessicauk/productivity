@@ -1,20 +1,30 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Form from "@/components/form";
 
+type FormState = {
+  title: string;
+  description: string;
+  duration: string;
+  priority: string;
+  selectedTime: Date | null;
+};
+
 interface TaskDialogProps {
   open: boolean;
   handleClose: () => void;
 }
+
 export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const handleSubmit = (data: FormState) => {
+    console.log(data);
+  };
 
   return (
     <Dialog
@@ -26,26 +36,11 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
     >
       <DialogTitle id="task-dialog">Add New Task</DialogTitle>
       <DialogContent>
-        <Form />
+        <Form
+          handleSubmit={(data: FormState) => handleSubmit(data)}
+          handleClose={handleClose}
+        />
       </DialogContent>
-      <DialogActions>
-        <Button
-          autoFocus
-          onClick={handleClose}
-          variant="text"
-          className="text-white hover:text-teal-600"
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleClose}
-          autoFocus
-          variant="contained"
-          className="bg-teal-300 text-white hover:bg-teal-600"
-        >
-          Create
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }
