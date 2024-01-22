@@ -33,7 +33,8 @@ export default function Form() {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data: FormState) => console.log(data);
+
+  const onSubmit = (data: any) => console.log(data);
 
   console.log(watch("example")); // watch input value by passing the name of it
 
