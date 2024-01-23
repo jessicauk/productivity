@@ -23,7 +23,7 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
   const mutation = useMutation<ApiResponse, Error, Task>({
     mutationFn: postTask,
     onSuccess: () => {
-      queryClient.invalidateQueries("tasks");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       handleClose();
     },
   });
