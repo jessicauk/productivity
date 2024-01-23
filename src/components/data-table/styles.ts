@@ -6,6 +6,6 @@ export const StyledDataGrid = styled(DataGrid)(() => ({
     color: "#fff",
     "& svg": {
       color: "#fff",
-    }
-  }
+    },
+  },
 }));

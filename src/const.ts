@@ -1,1 +1,1 @@
-export const GET_TASKS = "/api/tasks"
+export const API_TASKS = "/api/tasks"

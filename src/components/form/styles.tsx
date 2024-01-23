@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 import Select from "@mui/material/Select";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { TimeField } from "@mui/x-date-pickers/TimeField";
 
 export const StyledSelect = styled(Select)(() => ({
   "& .custom-outlined": {
@@ -11,7 +11,7 @@ export const StyledSelect = styled(Select)(() => ({
   },
 }));
 
-export const StyledTimepicker = styled(TimePicker)(() => ({
+export const StyledTimeField = styled(TimeField)(() => ({
   root: {
     borderColor: "red",
   },

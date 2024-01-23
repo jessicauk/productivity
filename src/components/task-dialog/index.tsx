@@ -4,15 +4,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import Form from "@/components/form";
-
-type FormState = {
-  title: string;
-  description: string;
-  duration: string;
-  priority: string;
-  selectedTime: Date | null;
-};
+import { ApiResponse, postTask } from "@/api-client";
+import timeToSeconds from "@/utils/timeToSeconds";
+import { Task, TaskForm } from "../../interfaces";
 
 interface TaskDialogProps {
   open: boolean;
@@ -21,9 +18,30 @@ interface TaskDialogProps {
 
 export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
   const theme = useTheme();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<ApiResponse, Error, Task>({
+    mutationFn: postTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries("tasks");
+      handleClose();
+    },
+  });
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const handleSubmit = (data: FormState) => {
-    console.log(data);
+
+  const handleSubmit = (data: TaskForm) => {
+    const priorityId = parseInt(data.priorityId);
+    const duration = dayjs(data.durationCustom).format("HH:mm:ss")
+      ? timeToSeconds(dayjs(data.durationCustom).format("HH:mm:ss"))
+      : parseInt(data.duration, 2);
+
+    const newTask = {
+      title: data.title,
+      description: data.description,
+      priorityId,
+      duration,
+    };
+    mutation.mutate(newTask);
   };
 
   return (
@@ -37,7 +55,7 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
       <DialogTitle id="task-dialog">Add New Task</DialogTitle>
       <DialogContent>
         <Form
-          handleSubmit={(data: FormState) => handleSubmit(data)}
+          handleSubmit={(data: TaskForm) => handleSubmit(data)}
           handleClose={handleClose}
         />
       </DialogContent>

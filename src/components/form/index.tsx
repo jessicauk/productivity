@@ -9,27 +9,22 @@ import { Box, Button } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { StyledTimepicker } from "./styles";
-
-type FormState = {
-  title: string;
-  description: string;
-  duration: string;
-  priority: string;
-  selectedTime: Date | null;
-};
+import dayjs, { Dayjs } from "dayjs";
+import { StyledTimeField } from "./styles";
+import { TaskForm } from "../../interfaces";
 
 interface FormProps {
-  handleSubmit: (data: FormState) => void;
+  handleSubmit: (data: TaskForm) => void;
   handleClose: () => void;
 }
+
 export default function Form(props: FormProps) {
-  const [formState, setFormState] = useState<FormState>({
+  const [formState, setFormState] = useState<TaskForm>({
     title: "",
     description: "",
     duration: "",
-    priority: "",
-    selectedTime: null,
+    priorityId: "",
+    durationCustom: dayjs("00:00:00"),
   });
 
   const {
@@ -37,16 +32,15 @@ export default function Form(props: FormProps) {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormState>();
+  } = useForm<TaskForm>();
 
-  const onSubmit: SubmitHandler<FormState> = (data) => {
+  const onSubmit: SubmitHandler<TaskForm> = (data) => {
     props.handleSubmit(data);
-    props.handleClose();
   };
 
-  const handleInputChange = <K extends keyof FormState>(
+  const handleInputChange = <K extends keyof TaskForm>(
     fieldName: K,
-    value: FormState[K]
+    value: TaskForm[K]
   ) => {
     setFormState((prevState) => ({
       ...prevState,
@@ -108,15 +102,18 @@ export default function Form(props: FormProps) {
       {formState.duration === "custom" && (
         <FormControl fullWidth margin="normal">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["TimePicker"]}>
-              <StyledTimepicker
+            <DemoContainer components={["TimeField"]}>
+              <StyledTimeField
+                {...register("durationCustom", { required: true })}
+                onChange={(newValue) =>
+                  handleInputChange("durationCustom", newValue as Dayjs)
+                }
                 slotProps={{
                   textField: {
                     className: "dark:text-white w-full",
                   },
                 }}
-                views={["hours", "minutes", "seconds"]}
-                format="mm:ss"
+                format="hh:mm:ss"
                 label="Custom Time"
                 className="dark:text-white custom-outline custom-timepicker"
               />
@@ -129,10 +126,10 @@ export default function Form(props: FormProps) {
         <InputLabel className="dark:text-white">Priority</InputLabel>
         <Select
           id="priority"
-          {...register("priority", { required: true })}
+          {...register("priorityId", { required: true })}
           inputProps={{ className: "dark:text-white" }}
-          value={formState.priority}
-          onChange={(e) => handleInputChange("priority", e.target.value)}
+          value={formState.priorityId}
+          onChange={(e) => handleInputChange("priorityId", e.target.value)}
           label="Priority"
           className="dark:text-white custom-outline"
         >
