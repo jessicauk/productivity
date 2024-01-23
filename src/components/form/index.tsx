@@ -1,21 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Box, Button } from "@mui/material";
+import { Box, Button, FormLabel } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
 import { StyledTimeField } from "./styles";
-import { TaskForm } from "../../interfaces";
+import { TaskForm, TaskResponse } from "../../interfaces";
 
 interface FormProps {
   handleSubmit: (data: TaskForm) => void;
   handleClose: () => void;
+  data?: TaskResponse;
 }
 
 export default function Form(props: FormProps) {
@@ -27,10 +28,19 @@ export default function Form(props: FormProps) {
     durationCustom: dayjs("00:00:00"),
   });
 
+  useEffect(() => {
+    setFormState({
+      title: props?.data?.title || "",
+      description: props?.data?.description || "",
+      duration: props?.data?.duration.toString() || "",
+      priorityId: props?.data?.priorityId.toString() || "",
+      durationCustom: dayjs("00:00:00"),
+    });
+  }, [props.data]);
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<TaskForm>();
 

@@ -6,6 +6,7 @@ async function getTasks() {
   const result = await response.json();
   return result;
 }
+
 export type ApiResponse = {
   statusCode: number;
   success: boolean;
@@ -25,4 +26,10 @@ async function postTask(task: Task): Promise<ApiResponse> {
   return result;
 }
 
-export { getTasks, postTask };
+async function getTaskById(id: string): Promise<TaskResponse> {
+  const response = await fetch(`${API_TASKS}/${id}`);
+  const result = await response.json();
+  return result.data;
+}
+
+export { getTasks, postTask, getTaskById };

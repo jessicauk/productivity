@@ -1,8 +1,10 @@
 "use client";
 
-import { useDispatch } from "react-redux";
-import { toggle } from "@/features/settings/settingsSlice";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getTaskById } from "@/api-client";
 import Form from "@/components/form";
+import { TaskForm, TaskResponse } from "@/interfaces";
 
 interface TaskPageProps {
   params: {
@@ -10,26 +12,24 @@ interface TaskPageProps {
   };
 }
 
-type FormState = {
-  title: string;
-  description: string;
-  duration: string;
-  priority: string;
-  selectedTime: Date | null;
-};
 export default function TaskPage({ params }: TaskPageProps) {
-  const dispatch = useDispatch();
+  const router = useRouter();
 
-  const handleDrawerToggle = () => {
-    dispatch(toggle());
+  const { data, isLoading } = useQuery<TaskResponse>({
+    queryKey: ["task", params.taskId],
+    queryFn: () => getTaskById(params.taskId),
+  });
+  const handleClose = () => {
+    router.push("/tasks");
   };
 
   return (
     <div>
-      {params.taskId}
+      <h1 className="dark:text-white font-bold">Task #{params.taskId}</h1>
       <Form
-        handleSubmit={(data: FormState) => console.log(data)}
-        handleClose={handleDrawerToggle}
+        data={data}
+        handleSubmit={(data: TaskForm) => console.log(data)}
+        handleClose={handleClose}
       />
     </div>
   );
