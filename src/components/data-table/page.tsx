@@ -5,18 +5,31 @@ import { useQuery } from "@tanstack/react-query";
 import { getTasks } from "@/api-client";
 import Link from "next/link";
 import { StyledDataGrid } from "./styles";
+import Timer from "@/components/timer";
 
 const columns: GridColDef[] = [
   {
     field: "taskId",
     headerName: "ID",
-    width: 100,
+    width: 40,
     headerClassName: "text-white font-bold",
     renderCell: (params) => (
       <Link href={`/tasks/${params.row.taskId}`} passHref>
         {params.row.taskId}
       </Link>
     ),
+  },
+  {
+    field: "spentTime",
+    headerName: "Timer",
+    width: 150,
+    headerClassName: "text-white font-bold",
+    renderCell: (params) => {
+      if (params.row.done) {
+        return <div>Completed</div>;
+      }
+      return <Timer duration={params.row.duration} />;
+    },
   },
   {
     field: "title",
@@ -46,19 +59,13 @@ const columns: GridColDef[] = [
   {
     field: "duration",
     headerName: "Duration",
-    width: 300,
+    width: 100,
     headerClassName: "text-white font-semibold",
   },
   {
     field: "timeSpent",
     headerName: "Time Spent",
-    width: 300,
-    headerClassName: "text-white font-semibold",
-  },
-  {
-    field: "done",
-    headerName: "Is done",
-    width: 130,
+    width: 100,
     headerClassName: "text-white font-semibold",
   },
 ];

@@ -6,11 +6,10 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Box, Button } from "@mui/material";
-
-// TO DO
-// import TimePicker from "@mui/lab/TimePicker";
-// import AdapterDateFns from "@mui/lab/AdapterDateFns";
-// import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { StyledTimepicker } from "./styles";
 
 type FormState = {
   title: string;
@@ -85,6 +84,7 @@ export default function Form(props: FormProps) {
         fullWidth
         multiline
       />
+
       <FormControl fullWidth margin="normal">
         <InputLabel className="dark:text-white custom-outline">
           Duration
@@ -92,36 +92,57 @@ export default function Form(props: FormProps) {
         <Select
           id="duration"
           {...register("duration", { required: true })}
-          inputProps={{ className: "dark:text-white bg-transparent" }}
+          inputProps={{ className: "dark:text-white" }}
           value={formState.duration}
           onChange={(e) => handleInputChange("duration", e.target.value)}
           label="Duration"
-          className="dark:text-white custom-outline bg-transparent"
+          className="dark:text-white custom-outline"
         >
           <MenuItem value="30">30 mins</MenuItem>
           <MenuItem value="45">45 mins</MenuItem>
           <MenuItem value="60">1 hr</MenuItem>
-          <MenuItem value="custom">Custom</MenuItem>
+          <MenuItem value="custom">custom</MenuItem>
         </Select>
       </FormControl>
+
+      {formState.duration === "custom" && (
+        <FormControl fullWidth margin="normal">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["TimePicker"]}>
+              <StyledTimepicker
+                slotProps={{
+                  textField: {
+                    className: "dark:text-white w-full",
+                  },
+                }}
+                views={["hours", "minutes", "seconds"]}
+                format="mm:ss"
+                label="Custom Time"
+                className="dark:text-white custom-outline custom-timepicker"
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+        </FormControl>
+      )}
 
       <FormControl fullWidth margin="normal">
         <InputLabel className="dark:text-white">Priority</InputLabel>
         <Select
           id="priority"
           {...register("priority", { required: true })}
-          inputProps={{ className: "dark:text-white custom-menu-list" }}
+          inputProps={{ className: "dark:text-white" }}
           value={formState.priority}
           onChange={(e) => handleInputChange("priority", e.target.value)}
           label="Priority"
-          className="dark:text-white custom-outline custom-menu-list"
+          className="dark:text-white custom-outline"
         >
           <MenuItem value="1">High</MenuItem>
           <MenuItem value="2">Medium</MenuItem>
           <MenuItem value="3">Low</MenuItem>
         </Select>
       </FormControl>
-      <Box>
+
+      <Box className="flex justify-end my-8">
         <Button
           autoFocus
           onClick={props.handleClose}
