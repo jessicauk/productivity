@@ -5,13 +5,15 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Box, Button, FormLabel } from "@mui/material";
+import { Box, Button, FormHelperText } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
 import { StyledTimeField } from "./styles";
 import { TaskForm, TaskResponse } from "../../interfaces";
+import { timeToSeconds } from "../../utils/timeToSeconds";
+import { useTimeFormatter } from "@/hooks/useTimeFormatter";
 
 interface FormProps {
   handleSubmit: (data: TaskForm) => void;
@@ -20,6 +22,7 @@ interface FormProps {
 }
 
 export default function Form(props: FormProps) {
+  const { getTimeFormat } = useTimeFormatter();
   const [formState, setFormState] = useState<TaskForm>({
     title: "",
     description: "",
@@ -32,9 +35,9 @@ export default function Form(props: FormProps) {
     setFormState({
       title: props?.data?.title || "",
       description: props?.data?.description || "",
-      duration: props?.data?.duration.toString() || "",
+      duration: "custom",
       priorityId: props?.data?.priorityId.toString() || "",
-      durationCustom: dayjs("00:00:00"),
+      durationCustom: dayjs(getTimeFormat(props?.data?.duration || 0).toString(), "HH:mm:ss"),
     });
   }, [props.data]);
 
@@ -73,6 +76,12 @@ export default function Form(props: FormProps) {
         margin="normal"
         fullWidth
         autoFocus
+        error={errors.title?.type === "required" && !formState.title}
+        helperText={
+          errors.title?.type === "required" && !formState.title
+            ? "Title is required"
+            : ""
+        }
       />
       <TextField
         {...register("description")}
@@ -89,7 +98,11 @@ export default function Form(props: FormProps) {
         multiline
       />
 
-      <FormControl fullWidth margin="normal">
+      <FormControl
+        fullWidth
+        margin="normal"
+        error={errors.title?.type === "required"}
+      >
         <InputLabel className="dark:text-white custom-outline">
           Duration
         </InputLabel>
@@ -101,16 +114,28 @@ export default function Form(props: FormProps) {
           onChange={(e) => handleInputChange("duration", e.target.value)}
           label="Duration"
           className="dark:text-white custom-outline"
+          error={errors.duration?.type === "required"}
         >
           <MenuItem value="30">30 mins</MenuItem>
           <MenuItem value="45">45 mins</MenuItem>
           <MenuItem value="60">1 hr</MenuItem>
           <MenuItem value="custom">custom</MenuItem>
         </Select>
+        {errors.duration?.type === "required" && (
+          <FormHelperText>Duration is required</FormHelperText>
+        )}
       </FormControl>
 
       {formState.duration === "custom" && (
-        <FormControl fullWidth margin="normal">
+        <FormControl
+          fullWidth
+          margin="normal"
+          error={
+            (formState.duration === "custom" &&
+              errors.durationCustom?.type === "required") ||
+            timeToSeconds(formState.durationCustom?.toString() ?? "") > 7200
+          }
+        >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["TimeField"]}>
               <StyledTimeField
@@ -129,6 +154,12 @@ export default function Form(props: FormProps) {
               />
             </DemoContainer>
           </LocalizationProvider>
+          {errors.durationCustom?.type === "required" && (
+            <FormHelperText>Duration is required</FormHelperText>
+          )}
+          {timeToSeconds(formState.durationCustom?.toString() ?? "") > 7200 && (
+            <FormHelperText>Duration should be less than 2hr</FormHelperText>
+          )}
         </FormControl>
       )}
 
@@ -164,7 +195,7 @@ export default function Form(props: FormProps) {
           variant="contained"
           className="bg-teal-300 text-white hover:bg-teal-600"
         >
-          Create
+          {props.data ? "Update" : "Create"}
         </Button>
       </Box>
     </form>

@@ -12,8 +12,8 @@ interface TimerProps {
 export default function Timer({ duration = 200 }: TimerProps) {
   const [time, setTime] = useState(duration);
   const [isRunning, setIsRunning] = useState(false);
-  const timeFormatter = useTimeFormatter(time);
-
+  const { getTimeFormat } = useTimeFormatter();
+  const timeFormatter = getTimeFormat(time)
   useEffect(() => {
     let interval: NodeJS.Timeout;
 

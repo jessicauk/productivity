@@ -5,10 +5,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import dayjs from "dayjs";
 import Form from "@/components/form";
 import { ApiResponse, postTask } from "@/api-client";
-import timeToSeconds from "@/utils/timeToSeconds";
+import { timeToSeconds, minutesToSeconds } from "@/utils/timeToSeconds";
 import { Task, TaskForm } from "../../interfaces";
 
 interface TaskDialogProps {
@@ -31,9 +30,10 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
 
   const handleSubmit = (data: TaskForm) => {
     const priorityId = parseInt(data.priorityId);
-    const duration = dayjs(data.durationCustom).format("HH:mm:ss")
-      ? timeToSeconds(dayjs(data.durationCustom).format("HH:mm:ss"))
-      : parseInt(data.duration, 2);
+    const duration =
+      data?.durationCustom?.toString() !== "" && data?.durationCustom !== undefined
+        ? timeToSeconds(data?.durationCustom?.toString() ?? "")
+        : minutesToSeconds(parseInt(data?.duration ?? "0"));
 
     const newTask = {
       title: data.title,
@@ -41,6 +41,7 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
       priorityId,
       duration,
     };
+    
     mutation.mutate(newTask);
   };
 
