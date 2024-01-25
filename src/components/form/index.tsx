@@ -9,8 +9,8 @@ import { Box, Button, FormHelperText } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs, { Dayjs } from "dayjs";
-import { StyledTimeField } from "./styles";
 import { TaskForm, TaskResponse } from "../../interfaces";
 import { timeToSeconds } from "../../utils/timeToSeconds";
 import { useTimeFormatter } from "@/hooks/useTimeFormatter";
@@ -28,7 +28,7 @@ export default function Form(props: FormProps) {
     description: "",
     duration: "",
     priorityId: "",
-    durationCustom: dayjs("00:00:00"),
+    durationCustom: dayjs("00:00:00", "HH:mm:ss"),
   });
 
   useEffect(() => {
@@ -37,9 +37,12 @@ export default function Form(props: FormProps) {
       description: props?.data?.description || "",
       duration: "custom",
       priorityId: props?.data?.priorityId.toString() || "",
-      durationCustom: dayjs(getTimeFormat(props?.data?.duration || 0).toString(), "HH:mm:ss"),
+      durationCustom: dayjs(
+        getTimeFormat(props?.data?.duration || 0).time,
+        "HH:mm:ss"
+      ),
     });
-  }, [props.data]);
+  }, [props?.data]);
 
   const {
     register,
@@ -138,7 +141,8 @@ export default function Form(props: FormProps) {
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["TimeField"]}>
-              <StyledTimeField
+              <TimeField
+                value={formState.durationCustom}
                 {...register("durationCustom", { required: true })}
                 onChange={(newValue) =>
                   handleInputChange("durationCustom", newValue as Dayjs)
@@ -148,7 +152,8 @@ export default function Form(props: FormProps) {
                     className: "dark:text-white w-full",
                   },
                 }}
-                format="hh:mm:ss"
+                ampm={false}
+                format="HH:mm:ss"
                 label="Custom Time"
                 className="dark:text-white custom-outline custom-timepicker"
               />
