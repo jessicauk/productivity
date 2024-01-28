@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Box, Button, FormHelperText } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -23,82 +23,82 @@ interface FormProps {
 
 export default function Form(props: FormProps) {
   const { getTimeFormat } = useTimeFormatter();
-  const [formState, setFormState] = useState<TaskForm>({
-    title: "",
-    description: "",
-    duration: "",
-    priorityId: "",
-    durationCustom: dayjs("00:00:00", "HH:mm:ss"),
-  });
 
-  useEffect(() => {
-    setFormState({
+  const {
+    formState: { errors },
+    handleSubmit,
+    control,
+    watch,
+  } = useForm<TaskForm>({
+    defaultValues: {
       title: props?.data?.title || "",
       description: props?.data?.description || "",
-      duration: "custom",
+      duration: props?.data?.duration ? "custom" :"",
       priorityId: props?.data?.priorityId.toString() || "",
       durationCustom: dayjs(
         getTimeFormat(props?.data?.duration || 0).time,
         "HH:mm:ss"
       ),
-    });
-  }, [props?.data]);
+    },
+  });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TaskForm>();
+  watch("duration");
 
-  const onSubmit: SubmitHandler<TaskForm> = (data) => {
+  const formValues = control._formValues;
+
+  const onSubmit: SubmitHandler<TaskForm> = (data: TaskForm) => {
     props.handleSubmit(data);
-  };
-
-  const handleInputChange = <K extends keyof TaskForm>(
-    fieldName: K,
-    value: TaskForm[K]
-  ) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      [fieldName]: value,
-    }));
   };
 
   return (
     <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
-      <TextField
-        {...register("title", { required: true })}
-        InputLabelProps={{ className: "dark:text-white custom-outline" }}
-        InputProps={{
-          className: "dark:text-white border-white custom-outline",
+      <Controller
+        name="title"
+        rules={{ required: true }}
+        render={({ field }) => {
+          return (
+            <TextField
+              {...field}
+              InputLabelProps={{ className: "dark:text-white custom-outline" }}
+              InputProps={{
+                className: "dark:text-white border-white custom-outline",
+              }}
+              className="border-white custom-outline"
+              label="Title"
+              margin="normal"
+              fullWidth
+              autoFocus
+              error={errors.title?.type === "required" && !field.value}
+              helperText={
+                errors.title?.type === "required" && !field.value
+                  ? "Title is required"
+                  : ""
+              }
+            />
+          );
         }}
-        className="border-white custom-outline"
-        label="Title"
-        value={formState.title}
-        onChange={(e) => handleInputChange("title", e.target.value)}
-        margin="normal"
-        fullWidth
-        autoFocus
-        error={errors.title?.type === "required" && !formState.title}
-        helperText={
-          errors.title?.type === "required" && !formState.title
-            ? "Title is required"
-            : ""
-        }
+        control={control}
       />
-      <TextField
-        {...register("description")}
-        InputLabelProps={{ className: "dark:text-white custom-outline" }}
-        InputProps={{
-          className: "dark:text-white border-white custom-outline",
+
+      <Controller
+        name="description"
+        render={({ field }) => {
+          return (
+            <TextField
+              {...field}
+              InputLabelProps={{ className: "dark:text-white custom-outline" }}
+              InputProps={{
+                className: "dark:text-white border-white custom-outline",
+              }}
+              className="border-white custom-outline"
+              label="Description"
+              margin="normal"
+              fullWidth
+              multiline
+            />
+          );
         }}
-        className="border-white custom-outline"
-        label="Description"
-        value={formState.description}
-        onChange={(e) => handleInputChange("description", e.target.value)}
-        margin="normal"
-        fullWidth
-        multiline
+        control={control}
       />
 
       <FormControl
@@ -109,80 +109,104 @@ export default function Form(props: FormProps) {
         <InputLabel className="dark:text-white custom-outline">
           Duration
         </InputLabel>
-        <Select
-          id="duration"
-          {...register("duration", { required: true })}
-          inputProps={{ className: "dark:text-white" }}
-          value={formState.duration}
-          onChange={(e) => handleInputChange("duration", e.target.value)}
-          label="Duration"
-          className="dark:text-white custom-outline"
-          error={errors.duration?.type === "required"}
-        >
-          <MenuItem value="30">30 mins</MenuItem>
-          <MenuItem value="45">45 mins</MenuItem>
-          <MenuItem value="60">1 hr</MenuItem>
-          <MenuItem value="custom">custom</MenuItem>
-        </Select>
+        <Controller
+          name="duration"
+          rules={{ required: true }}
+          render={({ field }) => {
+            return (
+              <Select
+                {...field}
+                id="duration"
+                inputProps={{ className: "dark:text-white" }}
+                label="Duration"
+                className="dark:text-white custom-outline"
+                error={errors.duration?.type === "required"}
+              >
+                <MenuItem value="30">30 mins</MenuItem>
+                <MenuItem value="45">45 mins</MenuItem>
+                <MenuItem value="60">1 hr</MenuItem>
+                <MenuItem value="custom">custom</MenuItem>
+              </Select>
+            );
+          }}
+          control={control}
+        />
+
         {errors.duration?.type === "required" && (
           <FormHelperText>Duration is required</FormHelperText>
         )}
       </FormControl>
 
-      {formState.duration === "custom" && (
+      {formValues.duration === "custom" && (
         <FormControl
           fullWidth
           margin="normal"
           error={
-            (formState.duration === "custom" &&
+            (formValues.duration === "custom" &&
               errors.durationCustom?.type === "required") ||
-            timeToSeconds(formState.durationCustom?.toString() ?? "") > 7200
+            timeToSeconds(formValues.durationCustom?.toString() ?? "") > 7200
           }
         >
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["TimeField"]}>
-              <TimeField
-                value={formState.durationCustom}
-                {...register("durationCustom", { required: true })}
-                onChange={(newValue) =>
-                  handleInputChange("durationCustom", newValue as Dayjs)
-                }
-                slotProps={{
-                  textField: {
-                    className: "dark:text-white w-full",
-                  },
-                }}
-                ampm={false}
-                format="HH:mm:ss"
-                label="Custom Time"
-                className="dark:text-white custom-outline custom-timepicker"
-              />
-            </DemoContainer>
-          </LocalizationProvider>
+          <Controller
+            name="durationCustom"
+            rules={{ required: true }}
+            render={({ field }) => {
+              return (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["TimeField"]}>
+                    <TimeField
+                      {...field}
+                      slotProps={{
+                        textField: {
+                          className: "dark:text-white w-full",
+                        },
+                      }}
+                      ampm={false}
+                      format="HH:mm:ss"
+                      label="Custom Time"
+                      className="dark:text-white custom-outline custom-timepicker"
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              );
+            }}
+            control={control}
+          />
+
           {errors.durationCustom?.type === "required" && (
             <FormHelperText>Duration is required</FormHelperText>
           )}
-          {timeToSeconds(formState.durationCustom?.toString() ?? "") > 7200 && (
-            <FormHelperText>Duration should be less than 2hr</FormHelperText>
+          {timeToSeconds(formValues.durationCustom?.toString() ?? "") >
+            7200 && (
+            <FormHelperText className="text-red-800">
+              Duration should be less than 2hr
+            </FormHelperText>
           )}
         </FormControl>
       )}
 
       <FormControl fullWidth margin="normal">
         <InputLabel className="dark:text-white">Priority</InputLabel>
-        <Select
-          id="priority"
-          {...register("priorityId", { required: true })}
-          inputProps={{ className: "dark:text-white" }}
-          value={formState.priorityId}
-          onChange={(e) => handleInputChange("priorityId", e.target.value)}
-          label="Priority"
-          className="dark:text-white custom-outline"
-        >
-          <MenuItem value="1">High</MenuItem>
-          <MenuItem value="2">Medium</MenuItem>
-          <MenuItem value="3">Low</MenuItem>
-        </Select>
+        <Controller
+          name="priorityId"
+          rules={{ required: true }}
+          render={({ field }) => {
+            return (
+              <Select
+                {...field}
+                id="priority"
+                inputProps={{ className: "dark:text-white" }}
+                label="Priority"
+                className="dark:text-white custom-outline"
+              >
+                <MenuItem value="1">High</MenuItem>
+                <MenuItem value="2">Medium</MenuItem>
+                <MenuItem value="3">Low</MenuItem>
+              </Select>
+            );
+          }}
+          control={control}
+        />
       </FormControl>
 
       <Box className="flex justify-end my-8">

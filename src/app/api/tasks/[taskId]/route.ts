@@ -19,7 +19,7 @@ export async function PUT(
     where: { taskId: Number(params.taskId) },
     data,
   });
-  return NextResponse.json({ data: taskUpdated });
+  return NextResponse.json(taskUpdated);
 }
 export async function DELETE(
   request: any,
