@@ -70,4 +70,17 @@ async function updateTask({
   return result;
 }
 
-export { getTasks, postTask, getTaskById, updateTask };
+async function deleteTask(taskId: string): Promise<ApiResponse> {
+  const response = await fetch(`${API_TASKS}/${taskId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  const result = response.json();
+  return result;
+}
+
+export { getTasks, postTask, getTaskById, updateTask, deleteTask };

@@ -4,6 +4,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SaveIcon from "@mui/icons-material/Save";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Box, Button, FormHelperText } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -19,6 +21,7 @@ interface FormProps {
   handleSubmit: (data: TaskForm) => void;
   handleClose: () => void;
   data?: TaskResponse;
+  loading?: boolean;
 }
 
 export default function Form(props: FormProps) {
@@ -33,7 +36,7 @@ export default function Form(props: FormProps) {
     defaultValues: {
       title: props?.data?.title || "",
       description: props?.data?.description || "",
-      duration: props?.data?.duration ? "custom" :"",
+      duration: props?.data?.duration ? "custom" : "",
       priorityId: props?.data?.priorityId.toString() || "",
       durationCustom: dayjs(
         getTimeFormat(props?.data?.duration || 0).time,
@@ -214,18 +217,22 @@ export default function Form(props: FormProps) {
           autoFocus
           onClick={props.handleClose}
           variant="text"
-          className="text-white hover:text-teal-600"
+          className="dark:text-white hover:text-teal-600"
         >
           Cancel
         </Button>
-        <Button
+        <LoadingButton
+          disabled={props.loading || false}
+          sx={{ span: { color: "white" } }}
+          size="large"
+          loading={props.loading || false}
           type="submit"
           autoFocus
-          variant="contained"
+          variant={props.loading ? "outlined" : "contained"}
           className="bg-teal-300 text-white hover:bg-teal-600"
         >
           {props.data ? "Update" : "Create"}
-        </Button>
+        </LoadingButton>
       </Box>
     </form>
   );
