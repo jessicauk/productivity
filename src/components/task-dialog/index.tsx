@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -31,10 +31,12 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
 
   const handleSubmit = (data: TaskForm) => {
     const priorityId = parseInt(data.priorityId);
-    
+
     const duration =
-      data?.duration === "custom" 
-        ? timeToSeconds(dayjs(data?.durationCustom?.toString()).format("HH:mm:ss"))
+      data?.duration === "custom"
+        ? timeToSeconds(
+            dayjs(data?.durationCustom?.toString()).format("HH:mm:ss")
+          )
         : minutesToSeconds(parseInt(data?.duration ?? "0"));
 
     const newTask = {
@@ -58,6 +60,7 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
       <DialogTitle id="task-dialog">Add New Task</DialogTitle>
       <DialogContent>
         <Form
+          loading={mutation.isPending}
           handleSubmit={(data: TaskForm) => handleSubmit(data)}
           handleClose={handleClose}
         />

@@ -45,6 +45,7 @@ export default function Form(props: FormProps) {
   });
 
   watch("duration");
+  watch("durationCustom");
 
   const formValues = control._formValues;
 
@@ -106,7 +107,7 @@ export default function Form(props: FormProps) {
       <FormControl
         fullWidth
         margin="normal"
-        error={errors.title?.type === "required"}
+        error={errors.duration?.type === "required"}
       >
         <InputLabel className="dark:text-white custom-outline">
           Duration
@@ -135,7 +136,9 @@ export default function Form(props: FormProps) {
         />
 
         {errors.duration?.type === "required" && (
-          <FormHelperText>Duration is required</FormHelperText>
+          <FormHelperText className="text-red-600">
+            Duration is required
+          </FormHelperText>
         )}
       </FormControl>
 
@@ -146,12 +149,20 @@ export default function Form(props: FormProps) {
           error={
             (formValues.duration === "custom" &&
               errors.durationCustom?.type === "required") ||
-            timeToSeconds(formValues.durationCustom?.toString() ?? "") > 7200
+            timeToSeconds(
+              dayjs(formValues?.durationCustom?.toString()).format("HH:mm:ss")
+            ) > 7199
           }
         >
           <Controller
             name="durationCustom"
-            rules={{ required: true }}
+            rules={{
+              required: formValues.duration === "custom",
+              validate: (value) =>
+                timeToSeconds(
+                  dayjs(value?.toString() ?? null).format("HH:mm:ss")
+                ) < 7199,
+            }}
             render={({ field }) => {
               return (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -178,8 +189,9 @@ export default function Form(props: FormProps) {
           {errors.durationCustom?.type === "required" && (
             <FormHelperText>Duration is required</FormHelperText>
           )}
-          {timeToSeconds(formValues.durationCustom?.toString() ?? "") >
-            7200 && (
+          {timeToSeconds(
+            dayjs(formValues?.durationCustom?.toString()).format("HH:mm:ss")
+          ) > 7199 && (
             <FormHelperText className="text-red-800">
               Duration should be less than 2hr
             </FormHelperText>
@@ -187,7 +199,11 @@ export default function Form(props: FormProps) {
         </FormControl>
       )}
 
-      <FormControl fullWidth margin="normal">
+      <FormControl
+        fullWidth
+        margin="normal"
+        error={errors.priorityId?.type === "required"}
+      >
         <InputLabel className="dark:text-white">Priority</InputLabel>
         <Controller
           name="priorityId"
@@ -209,6 +225,9 @@ export default function Form(props: FormProps) {
           }}
           control={control}
         />
+        {errors.priorityId?.type === "required" && (
+          <FormHelperText>Priority is required</FormHelperText>
+        )}
       </FormControl>
 
       <Box className="flex justify-end my-8">

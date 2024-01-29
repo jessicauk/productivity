@@ -33,6 +33,7 @@ export default function TaskPage({ params }: TaskPageProps) {
   const mutation = useMutation<ApiResponse, Error, Task>({
     mutationFn: (data) => updateTask({ data, taskId: params.taskId }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["task"] });
       router.push("/tasks");
     },
   });
@@ -80,7 +81,7 @@ export default function TaskPage({ params }: TaskPageProps) {
         <Loader />
       ) : (
         <div>
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <h1 className="dark:text-white font-bold">Task #{params.taskId}</h1>
             <IconButton
               aria-label="delete"
