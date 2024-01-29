@@ -23,3 +23,8 @@ export interface TaskResponse extends Task {
   timeSpent: number;
   authorId: number;
 }
+
+export interface Counter {
+  _count: number;
+  statusId: number;
+}

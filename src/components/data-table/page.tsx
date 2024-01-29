@@ -34,7 +34,7 @@ const columns: GridColDef[] = [
   {
     field: "title",
     headerName: "Title",
-    width: 300,
+    width: 200,
     headerClassName: "text-white font-bold",
     renderCell: (params) => (
       <Link href={`/tasks/${params.row.taskId}`} passHref>
@@ -47,7 +47,7 @@ const columns: GridColDef[] = [
     headerName: "Description",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
-    width: 350,
+    width: 250,
     headerClassName: "text-white font-semibold",
   },
   {
@@ -55,6 +55,20 @@ const columns: GridColDef[] = [
     headerName: "Status",
     width: 130,
     headerClassName: "text-white font-semibold",
+    renderCell: (params) => (
+      <div className="flex justify-center items-center">
+        <div
+          className={`w-4 h-4 rounded-full ${
+            params.row.status.name === "To Do"
+              ? "bg-violet-300"
+              : params.row.status.name === "In Progress"
+              ? "bg-yellow-300"
+              : "bg-sky-300"
+          }`}
+        />
+        <div className="ml-2">{params.row.status.name}</div>
+      </div>
+    )
   },
   {
     field: "duration",
@@ -67,6 +81,26 @@ const columns: GridColDef[] = [
     headerName: "Time Spent",
     width: 100,
     headerClassName: "text-white font-semibold",
+  },
+  {
+    field: "priority",
+    headerName: "Priority",
+    width: 100,
+    headerClassName: "text-white font-semibold",
+    renderCell: (params) => (
+      <div className="flex justify-center items-center">
+        <div
+          className={`w-4 h-4 rounded-full ${
+            params.row.priority.name === "high"
+              ? "bg-red-300"
+              : params.row.priority.name === "medium"
+              ? "bg-orange-300"
+              : "bg-green-300"
+          }`}
+        />
+        <div className="ml-2">{params.row.priority.name}</div>
+      </div>
+    )
   },
 ];
 
@@ -102,7 +136,7 @@ export default function DataTable() {
         }}
         pageSizeOptions={[5, 10]}
         getRowClassName={(params) =>
-          `task--${params.row.status.replaceAll(" ", "-").toLowerCase()}`
+          `task--${params.row.status.name.replaceAll(" ", "-").toLowerCase()}`
         }
         classes={{
           root: "dark:text-white",
