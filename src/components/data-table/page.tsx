@@ -41,6 +41,7 @@ const getColumns = ({ onUpdate, getTimeFormat }: Props) =>
       headerName: "Timer",
       width: 150,
       headerClassName: "text-white font-bold",
+      valueGetter: (params) => params.row.timeSpent,
       renderCell: (params) => {
         if (params.row.done) {
           return <div>Completed</div>;
@@ -97,6 +98,7 @@ const getColumns = ({ onUpdate, getTimeFormat }: Props) =>
           <div className="ml-2">{params.row.status.name}</div>
         </div>
       ),
+      valueGetter: (params) => params.row.status.name,
     },
     {
       field: "duration",
@@ -131,6 +133,7 @@ const getColumns = ({ onUpdate, getTimeFormat }: Props) =>
           <div className="ml-2">{params.row.priority.name}</div>
         </div>
       ),
+      valueGetter: (params) => params.row.priority.name,
     },
   ] as GridColDef[];
 
@@ -161,6 +164,7 @@ export default function DataTable() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["counter"] });
+      queryClient.invalidateQueries({ queryKey: ["history"] });
     },
   });
 

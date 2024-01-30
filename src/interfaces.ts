@@ -21,13 +21,9 @@ export interface Task {
 export interface TaskResponse extends Task {
   createdAt: string;
   updatedAt: string;
-  done: boolean;
   status: { idStatus: number; name: string };
-  statusId: number;
-  timeSpent: number;
   authorId: number;
   priority: { idPriority: number; name: string };
-  priorityId: number;
 }
 
 export interface Counter {

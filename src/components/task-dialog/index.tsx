@@ -24,6 +24,7 @@ export default function TaskDialog({ open, handleClose }: TaskDialogProps) {
     mutationFn: postTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["counter"] });
       handleClose();
     },
   });

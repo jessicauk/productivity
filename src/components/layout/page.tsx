@@ -19,6 +19,7 @@ const drawerWidth = "80%";
 const navItems = [
   { title: "Home", href: "/tasks" },
   { title: "Charts", href: "/charts" },
+  { title: "History", href: "/history" },
 ];
 
 export default function Layout({ children, window }: Props) {

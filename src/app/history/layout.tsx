@@ -10,10 +10,8 @@ const roboto = Roboto({
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full h-full bg-white dark:bg-slate-800 grid grid-cols-12 grid-flow-row gap-2">
-      <PageLayout>
-        <main className="my-8 px-8 w-full">{children}</main>
-      </PageLayout>
-    </div>
+    <PageLayout>
+      <main className="my-8 px-8 w-full col-span-full">{children}</main>
+    </PageLayout>
   );
 }
