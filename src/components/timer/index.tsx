@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import ReplayIcon from "@mui/icons-material/Replay";
+import StopIcon from "@mui/icons-material/Stop";
 import { useTimeFormatter } from "@/hooks/useTimeFormatter";
 import { Task } from "@/interfaces";
 
@@ -54,6 +55,7 @@ export default function Timer({ duration = 200, updateTime }: TimerProps) {
         {!isRunning && <PlayArrowIcon onClick={startTimer} />}
         {isRunning && <PauseIcon onClick={pauseTimer} />}
         <ReplayIcon onClick={resetTimer} />
+        <StopIcon onClick={() => updateTime({ duration, timeSpent: time, done: true })} />
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ const getColumns = ({ onUpdate, getTimeFormat }: Props) =>
     {
       field: "spentTime",
       headerName: "Timer",
-      width: 150,
+      width: 180,
       headerClassName: "text-white font-bold",
       valueGetter: (params) => params.row.timeSpent,
       renderCell: (params) => {
