@@ -51,9 +51,12 @@ async function updateTask({
   data,
   taskId,
 }: {
-  data: Task;
+  data: Partial<Task>;
   taskId: string;
 }): Promise<ApiResponse> {
+  if (!taskId) {
+    throw new Error("Task id is required");
+  }
   const response = await fetch(`${API_TASKS}/${taskId}`, {
     method: "PUT",
     headers: {

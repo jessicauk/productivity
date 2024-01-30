@@ -12,16 +12,22 @@ export interface Task {
   description?: string;
   duration: number;
   priorityId: number;
+  taskId?: number;
+  done?: boolean;
+  statusId?: number;
+  timeSpent?: number;
 }
 
 export interface TaskResponse extends Task {
-  taskId: number;
   createdAt: string;
   updatedAt: string;
   done: boolean;
-  status: string;
+  status: { idStatus: number; name: string };
+  statusId: number;
   timeSpent: number;
   authorId: number;
+  priority: { idPriority: number; name: string };
+  priorityId: number;
 }
 
 export interface Counter {

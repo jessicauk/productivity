@@ -1,5 +1,5 @@
 import { API_CHARTS_DASHBOARD } from "@/const";
-import { Task, Counter } from "../interfaces";
+import { Counter } from "../interfaces";
 
 export type ApiResponse = {
   statusCode: number;
