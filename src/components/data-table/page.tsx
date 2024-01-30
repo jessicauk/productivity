@@ -14,6 +14,16 @@ interface Props {
   getTimeFormat: (time: number) => { time: string };
 }
 
+const filterDurationShort = (value: number) => {
+  return value <= 1800;
+};
+const filterDurationMedium = (value: number) => {
+  return value > 1800 && value <= 3600;
+};
+const filterDurationLarge = (value: number) => {
+  return value > 3600;
+};
+
 const setStatus = (data: Partial<Task>) => {
   if (data.done) {
     return 3;
@@ -37,11 +47,11 @@ const getColumns = ({ onUpdate, getTimeFormat }: Props) =>
       ),
     },
     {
-      field: "spentTime",
+      field: "duration",
       headerName: "Timer",
       width: 180,
       headerClassName: "text-white font-bold",
-      valueGetter: (params) => params.row.timeSpent,
+      valueGetter: (params) => params.row.duration,
       renderCell: (params) => {
         if (params.row.done) {
           return <div>Completed</div>;
@@ -59,6 +69,50 @@ const getColumns = ({ onUpdate, getTimeFormat }: Props) =>
           />
         );
       },
+      filterOperators: [
+        {
+          label: "Shorter than 30 mins",
+          value: "shorter",
+          getApplyFilterFn: () => {
+            return (params): boolean => {
+              return (
+                !params.row.done && filterDurationShort(params.value as number)
+              );
+            };
+          },
+        },
+        {
+          label: "From 30 mins to 1 hour",
+          value: "medium",
+          getApplyFilterFn: () => {
+            return (params): boolean => {
+              return (
+                !params.row.done && filterDurationMedium(params.value as number)
+              );
+            };
+          },
+        },
+        {
+          label: "Greater than 1 hour",
+          value: "large",
+          getApplyFilterFn: () => {
+            return (params): boolean => {
+              return (
+                !params.row.done && filterDurationLarge(params.value as number)
+              );
+            };
+          },
+        },
+        {
+          label: "Completed",
+          value: "completed",
+          getApplyFilterFn: () => {
+            return (params): boolean => {
+              return params.row.done;
+            };
+          },
+        },
+      ],
     },
     {
       field: "title",
@@ -100,13 +154,13 @@ const getColumns = ({ onUpdate, getTimeFormat }: Props) =>
       ),
       valueGetter: (params) => params.row.status.name,
     },
-    {
+    /* {
       field: "duration",
       headerName: "Duration",
       width: 100,
       headerClassName: "text-white font-semibold",
       renderCell: (params) => getTimeFormat(params.value).time,
-    },
+    }, */
     {
       field: "timeSpent",
       headerName: "Time Spent",

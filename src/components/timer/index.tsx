@@ -55,7 +55,11 @@ export default function Timer({ duration = 200, updateTime }: TimerProps) {
         {!isRunning && <PlayArrowIcon onClick={startTimer} />}
         {isRunning && <PauseIcon onClick={pauseTimer} />}
         <ReplayIcon onClick={resetTimer} />
-        <StopIcon onClick={() => updateTime({ duration, timeSpent: time, done: true })} />
+        <StopIcon
+          onClick={() =>
+            updateTime({ duration, timeSpent: duration - time, done: true })
+          }
+        />
       </div>
     </div>
   );
