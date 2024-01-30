@@ -62,6 +62,7 @@ export default function Form(props: FormProps) {
           return (
             <TextField
               {...field}
+              disabled={props.data?.done}
               InputLabelProps={{ className: "dark:text-white custom-outline" }}
               InputProps={{
                 className: "dark:text-white border-white custom-outline",
@@ -89,6 +90,7 @@ export default function Form(props: FormProps) {
           return (
             <TextField
               {...field}
+              disabled={props.data?.done}
               InputLabelProps={{ className: "dark:text-white custom-outline" }}
               InputProps={{
                 className: "dark:text-white border-white custom-outline",
@@ -119,6 +121,7 @@ export default function Form(props: FormProps) {
             return (
               <Select
                 {...field}
+                disabled={props.data?.done}
                 id="duration"
                 inputProps={{ className: "dark:text-white" }}
                 label="Duration"
@@ -169,6 +172,7 @@ export default function Form(props: FormProps) {
                   <DemoContainer components={["TimeField"]}>
                     <TimeField
                       {...field}
+                      disabled={props.data?.done}
                       slotProps={{
                         textField: {
                           className: "dark:text-white w-full",
@@ -212,6 +216,7 @@ export default function Form(props: FormProps) {
             return (
               <Select
                 {...field}
+                disabled={props.data?.done}
                 id="priority"
                 inputProps={{ className: "dark:text-white" }}
                 label="Priority"
@@ -240,7 +245,7 @@ export default function Form(props: FormProps) {
           Cancel
         </Button>
         <LoadingButton
-          disabled={props.loading || false}
+          disabled={props.loading || props.data?.done || false}
           sx={{ span: { color: "white" } }}
           size="large"
           loading={props.loading || false}
