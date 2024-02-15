@@ -120,7 +120,7 @@ export default function History() {
     []
   );
   return (
-    <div style={{ height: 400, width: "100%" }} className="dark:text-white">
+    <div className="dark:text-white h-full w-full">
       <h1 className="dark:text-white text-left mb-5 text-2xl">History</h1>
       {isLoading ? (
         <Loader />
