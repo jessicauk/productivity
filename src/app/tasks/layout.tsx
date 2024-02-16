@@ -11,7 +11,7 @@ const roboto = Roboto({
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <PageLayout>
-      <main className="my-8 px-8 w-full col-span-full">{children}</main>
+      <main className="my-8 px-8 w-full col-span-full flex flex-col justify-center items-center content-center min-h-screen">{children}</main>
     </PageLayout>
   );
 }
