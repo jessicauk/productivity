@@ -122,11 +122,8 @@ export default function History() {
   return (
     <div className="dark:text-white h-full w-full">
       <h1 className="dark:text-white text-left mb-5 text-2xl">History</h1>
-      {isLoading ? (
-        <Loader />
-      ) : (
         <StyledDataGrid
-          className="dark:text-white"
+          className="dark:text-white h-auto w-full min-h-full"
           rows={data || []}
           columns={columns}
           getRowId={(row) => row.taskId}
@@ -145,7 +142,6 @@ export default function History() {
             toolbarContainer: "dark:text-white font-semibold",
           }}
         />
-      )}
     </div>
   );
 }

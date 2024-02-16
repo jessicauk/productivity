@@ -31,7 +31,7 @@ const Tasks = () => {
           backgroundColor="bg-sky-300"
         />
       </div>
-      <div className="w-full h-full">
+      <div className="w-full">
         <DialogContainer />
         <DataTable />
       </div>

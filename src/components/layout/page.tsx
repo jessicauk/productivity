@@ -33,7 +33,7 @@ export default function Layout({ children, window }: Props) {
   };
 
   return (
-    <div className="col-span-full w-full h-full min-h-screen bg-white dark:bg-slate-800 grid grid-flow-row grid-cols-1 gap-2">
+    <div className="col-span-full w-full h-full min-h-screen bg-white dark:bg-slate-800 grid grid-flow-row auto-rows-max grid-cols-1 gap-2">
       <Header navItems={navItems} setMobileOpen={() => handleDrawerToggle()} />
       <Drawer
         container={container}
